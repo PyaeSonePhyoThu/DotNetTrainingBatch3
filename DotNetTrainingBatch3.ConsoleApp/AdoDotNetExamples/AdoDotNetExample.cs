@@ -129,13 +129,37 @@ namespace DotNetTrainingBatch3.ConsoleApp.AdoDotNetExamples
                            SET [BlogTitle] = @BlogTitle
                               ,[BlogAuthor] = @BlogAuthor
                               ,[BlogContent] =@BlogContent
-                         WHERE BlogId = @BlogId)";
+                         WHERE BlogId = @BlogId";
 
             SqlCommand cmd = new SqlCommand(query, Connection);
             cmd.Parameters.AddWithValue("@BlogId", id);
             cmd.Parameters.AddWithValue("@BlogTitle", title);
             cmd.Parameters.AddWithValue("@BlogAuthor", author);
             cmd.Parameters.AddWithValue("@BlogContent", content);
+            int result = cmd.ExecuteNonQuery();
+
+            Connection.Close();
+
+            string message = result > 0 ? "Update Successfully" : "Update Failed";
+
+            Console.WriteLine(message);
+        }
+        public void Delete(int id, string title, string author, string content)
+        {
+            SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
+            sqlConnectionStringBuilder.DataSource = "MSI";
+            sqlConnectionStringBuilder.InitialCatalog = "TestDb";
+            sqlConnectionStringBuilder.UserID = "sa";
+            sqlConnectionStringBuilder.Password = "sasa@123";
+
+            SqlConnection Connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+
+            Connection.Open();
+            string query = @"Delete From [dbo].[Tbl_Blog]
+                         WHERE BlogId = @BlogId";
+
+            SqlCommand cmd = new SqlCommand(query, Connection);
+            cmd.Parameters.AddWithValue("@BlogId", id);
             int result = cmd.ExecuteNonQuery();
 
             Connection.Close();
