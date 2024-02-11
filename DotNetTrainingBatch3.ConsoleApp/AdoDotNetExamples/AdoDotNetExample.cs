@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,26 +13,36 @@ namespace DotNetTrainingBatch3.ConsoleApp.AdoDotNetExamples
         public void Read()
         {
             SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
-            sqlConnectionStringBuilder.DataSource = "MSI";
+            sqlConnectionStringBuilder.DataSource = ".";
             sqlConnectionStringBuilder.InitialCatalog = "TestDb";
             sqlConnectionStringBuilder.UserID = "sa";
             sqlConnectionStringBuilder.Password = "sasa@123";
 
-            SqlConnection Connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            Console.WriteLine("ConnectionString => " + sqlConnectionStringBuilder.ConnectionString);
 
-            Connection.Open();
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            Console.WriteLine("Connection Opening...");
+            connection.Open();
+            Console.WriteLine("Connection Opened...");
+
+            // data set
+            // data table
+            // data row
+            // data column
+
             string query = @"SELECT [BlogId]
-                              ,[BlogTitle]
-                              ,[BlogAuthor]
-                              ,[BlogContent]
-                          FROM [dbo].[Tbl_Blog]";
-
-            SqlCommand cmd = new SqlCommand(query, Connection);
+                  ,[BlogTitle]
+                  ,[BlogAuthor]
+                  ,[BlogContent]
+              FROM [dbo].[Tbl_Blog]";
+            SqlCommand cmd = new SqlCommand(query, connection);
             SqlDataAdapter adapter = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             adapter.Fill(dt);
 
-            Connection.Close();
+            Console.WriteLine("Connection Closing...");
+            connection.Close();
+            Console.WriteLine("Connection Closed...");
 
             foreach (DataRow dr in dt.Rows)
             {
@@ -40,37 +50,35 @@ namespace DotNetTrainingBatch3.ConsoleApp.AdoDotNetExamples
                 Console.WriteLine("Author..." + dr["BlogAuthor"]);
                 Console.WriteLine("Content..." + dr["BlogContent"]);
             }
-
         }
 
         public void Edit(int id)
         {
             SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
-            sqlConnectionStringBuilder.DataSource = "MSI";
+            sqlConnectionStringBuilder.DataSource = ".";
             sqlConnectionStringBuilder.InitialCatalog = "TestDb";
             sqlConnectionStringBuilder.UserID = "sa";
             sqlConnectionStringBuilder.Password = "sasa@123";
 
-            SqlConnection Connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            connection.Open();
 
-            Connection.Open();
             string query = @"SELECT [BlogId]
-                              ,[BlogTitle]
-                              ,[BlogAuthor]
-                              ,[BlogContent]
-                          FROM [dbo].[Tbl_Blog] Where BlogId = @BlogId";
-
-            SqlCommand cmd = new SqlCommand(query, Connection);
+                  ,[BlogTitle]
+                  ,[BlogAuthor]
+                  ,[BlogContent]
+              FROM [dbo].[Tbl_Blog] Where BlogId = @BlogId";
+            SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@BlogId", id);
             SqlDataAdapter adapter = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             adapter.Fill(dt);
 
-            Connection.Close();
+            connection.Close();
 
-            if(dt.Rows.Count == 0)
+            if (dt.Rows.Count == 0)
             {
-                Console.WriteLine("No Data Found");
+                Console.WriteLine("No data found.");
                 return;
             }
 
@@ -78,93 +86,98 @@ namespace DotNetTrainingBatch3.ConsoleApp.AdoDotNetExamples
             Console.WriteLine("Title..." + dr["BlogTitle"]);
             Console.WriteLine("Author..." + dr["BlogAuthor"]);
             Console.WriteLine("Content..." + dr["BlogContent"]);
-         
-
         }
+
         public void Create(string title, string author, string content)
         {
             SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
-            sqlConnectionStringBuilder.DataSource = "MSI";
+            sqlConnectionStringBuilder.DataSource = ".";
             sqlConnectionStringBuilder.InitialCatalog = "TestDb";
             sqlConnectionStringBuilder.UserID = "sa";
             sqlConnectionStringBuilder.Password = "sasa@123";
 
-            SqlConnection Connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            connection.Open();
 
-            Connection.Open();
             string query = @"INSERT INTO [dbo].[Tbl_Blog]
-                                       ([BlogTitle]
-                                       ,[BlogAuthor]
-                                       ,[BlogContent])
-                                 VALUES
-                                       (@BlogTitle,
-                                       ,@BlogAuthor
-                                       ,@BlogContent)";
-
-            SqlCommand cmd = new SqlCommand(query, Connection);
+           ([BlogTitle]
+           ,[BlogAuthor]
+           ,[BlogContent])
+     VALUES
+           (@BlogTitle
+           ,@BlogAuthor
+           ,@BlogContent)";
+            SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@BlogTitle", title);
             cmd.Parameters.AddWithValue("@BlogAuthor", author);
             cmd.Parameters.AddWithValue("@BlogContent", content);
             int result = cmd.ExecuteNonQuery();
 
+            connection.Close();
 
-            Connection.Close();
-
-            string message = result > 0 ? "Saving Successfully" : "Saving Failed";
-
-            Console.WriteLine(message); 
-        }
-        public void Update(int id, string title, string author, string content)
-        {
-            SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
-            sqlConnectionStringBuilder.DataSource = "MSI";
-            sqlConnectionStringBuilder.InitialCatalog = "TestDb";
-            sqlConnectionStringBuilder.UserID = "sa";
-            sqlConnectionStringBuilder.Password = "sasa@123";
-
-            SqlConnection Connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-
-            Connection.Open();
-            string query = @"UPDATE [dbo].[Tbl_Blog]
-                           SET [BlogTitle] = @BlogTitle
-                              ,[BlogAuthor] = @BlogAuthor
-                              ,[BlogContent] =@BlogContent
-                         WHERE BlogId = @BlogId";
-
-            SqlCommand cmd = new SqlCommand(query, Connection);
-            cmd.Parameters.AddWithValue("@BlogId", id);
-            cmd.Parameters.AddWithValue("@BlogTitle", title);
-            cmd.Parameters.AddWithValue("@BlogAuthor", author);
-            cmd.Parameters.AddWithValue("@BlogContent", content);
-            int result = cmd.ExecuteNonQuery();
-
-            Connection.Close();
-
-            string message = result > 0 ? "Update Successfully" : "Update Failed";
+            string message = result > 0 ? "Saving Successful." : "Saving Failed.";
+            //string message2 = "";
+            //if (result > 0)
+            //{
+            //    message2 = "Saving Successful.";
+            //}
+            //else
+            //{
+            //    message2 = "Saving Failed";
+            //}
 
             Console.WriteLine(message);
         }
-        public void Delete(int id, string title, string author, string content)
+
+        public void Update(int id, string title, string author, string content)
         {
             SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
-            sqlConnectionStringBuilder.DataSource = "MSI";
+            sqlConnectionStringBuilder.DataSource = ".";
             sqlConnectionStringBuilder.InitialCatalog = "TestDb";
             sqlConnectionStringBuilder.UserID = "sa";
             sqlConnectionStringBuilder.Password = "sasa@123";
 
-            SqlConnection Connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            connection.Open();
 
-            Connection.Open();
-            string query = @"Delete From [dbo].[Tbl_Blog]
-                         WHERE BlogId = @BlogId";
+            string query = @"UPDATE [dbo].[Tbl_Blog]
+   SET [BlogTitle] = @BlogTitle
+      ,[BlogAuthor] = @BlogAuthor
+      ,[BlogContent] = @BlogContent
+ WHERE BlogId = @BlogId";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@BlogId", id);
+            cmd.Parameters.AddWithValue("@BlogTitle", title);
+            cmd.Parameters.AddWithValue("@BlogAuthor", author);
+            cmd.Parameters.AddWithValue("@BlogContent", content);
+            int result = cmd.ExecuteNonQuery();
 
-            SqlCommand cmd = new SqlCommand(query, Connection);
+            connection.Close();
+
+            string message = result > 0 ? "Updating Successful." : "Updating Failed.";
+
+            Console.WriteLine(message);
+        }
+
+        public void Delete(int id)
+        {
+            SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
+            sqlConnectionStringBuilder.DataSource = ".";
+            sqlConnectionStringBuilder.InitialCatalog = "TestDb";
+            sqlConnectionStringBuilder.UserID = "sa";
+            sqlConnectionStringBuilder.Password = "sasa@123";
+
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            connection.Open();
+
+            string query = @"Delete From [dbo].[Tbl_Blog] WHERE BlogId = @BlogId";
+            SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@BlogId", id);
             int result = cmd.ExecuteNonQuery();
 
-            Connection.Close();
+            connection.Close();
 
-            string message = result > 0 ? "Update Successfully" : "Update Failed";
+            string message = result > 0 ? "Deleting Successful." : "Deleting Failed.";
 
             Console.WriteLine(message);
         }
