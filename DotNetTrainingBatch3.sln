@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetTraining3WebApi", "DotNetTraining3WebApi\DotNetTraining3WebApi.csproj", "{128C8945-26D2-4E04-BD6F-AB03CB91575C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{1984B3FB-DBD8-4367-BF70-7B16CA623E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1984B3FB-DBD8-4367-BF70-7B16CA623E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1984B3FB-DBD8-4367-BF70-7B16CA623E40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{128C8945-26D2-4E04-BD6F-AB03CB91575C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{128C8945-26D2-4E04-BD6F-AB03CB91575C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{128C8945-26D2-4E04-BD6F-AB03CB91575C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{128C8945-26D2-4E04-BD6F-AB03CB91575C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
